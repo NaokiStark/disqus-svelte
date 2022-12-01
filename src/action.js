@@ -1,14 +1,14 @@
-const mountNewDisqus = ({ identifier, url }) => {
+const mountNewDisqus = ({ identifier, url, siteName }) => {
     const config = document.createElement('script');
     config.id = 'disqus-config-block';
     config.type = 'text/javascript';
-    config.innerHTML = 
-    `const disqus_config = function () { this.page.url = '${url}'; this.page.identifier = '${identifier}'; };`;
+    config.innerHTML =
+        `const disqus_config = function () { this.page.url = '${url}'; this.page.identifier = '${identifier}'; };`;
     document.head.appendChild(config);
 
     const disqus = document.createElement('script');
     disqus.id = 'disqus-app-block';
-    disqus.src = 'https://svelte-test.disqus.com/embed.js';
+    disqus.src = `https://${siteName}.disqus.com/embed.js`;
     disqus.setAttribute('data-timestamp', +new Date());
     (document.head || document.body).appendChild(disqus);
 
@@ -23,13 +23,13 @@ const unmountDisqus = () => {
 }
 
 export default function DisqusThread(node, params) {
-    if(!params.identifier || params.identifier === window.location.pathname)
+    if (!params.identifier || params.identifier === window.location.pathname)
         console.warn("Warning: disqus-svelte Comments created without 'identifier' property. This is not recommended & default settings are not guaranteed to work.");
-    
+
     const thread = document.createElement('div');
     thread.id = 'disqus_thread';
     node.appendChild(thread);
-    
+
     mountNewDisqus(params);
 
     return {
